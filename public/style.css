@@ -7,6 +7,7 @@ body {
   background-color: #f0f2f5;
   margin: 0;
   padding: 0;
+  padding-bottom: 72px;
 }
 
 .container {
@@ -65,12 +66,14 @@ h1 {
   border-bottom-left-radius: 5px; /* Differentiate bubble shape slightly */
 }
 
-#chat-form { /* Targeting the form by ID for specificity */
+#chat-form {
+  /* Targeting the form by ID for specificity */
   display: flex;
   gap: 10px;
 }
 
-#user-input { /* Targeting the input by ID */
+#user-input {
+  /* Targeting the input by ID */
   flex-grow: 1; /* Input field takes available space */
   padding: 10px;
   border: 1px solid #ccc;
@@ -97,4 +100,49 @@ button:hover {
   content: "Thinking..."; /* Placeholder text for empty bot message */
   font-style: italic;
   color: #777;
+}
+
+/* Footer styles for the landing/chat page */
+.footer {
+  background: #f8f9fa;
+  border-top: 1px solid #e6e6e6;
+  padding: 12px 20px;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+.footer .social {
+  margin-bottom: 6px;
+}
+
+.footer .social a {
+  margin: 0 8px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.footer .social a:hover {
+  color: #0a66c2; /* LinkedIn-like hover color */
+  text-decoration: underline;
+}
+
+.footer .copyright {
+  font-size: 13px;
+  color: #666;
+}
+.footer-container {
+  position: fixed;
+  bottom: 0;
+  width: 50%;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e6e6e6;
+  padding: 10px 0;
 }
