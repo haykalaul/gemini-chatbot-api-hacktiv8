@@ -61,6 +61,7 @@ h1 {
   color: #333;
   align-self: flex-start; /* Align bot messages to the left */
   white-space: pre-wrap; /* Crucial for preserving newlines and spaces from AI */
+  min-height: 1.2em; /* Ensure a minimum height for empty messages */
   border-bottom-left-radius: 5px; /* Differentiate bubble shape slightly */
 }
 

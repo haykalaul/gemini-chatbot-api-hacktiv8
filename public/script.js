@@ -10,7 +10,6 @@ form.addEventListener('submit', async function (e) {
 
   appendMessage('user', userMessage);
   input.value = '';
-  // Add a "thinking" message for better UX
   const thinkingMsgElement = appendMessage('bot', 'Gemini is thinking...');
 
   try {
@@ -19,24 +18,22 @@ form.addEventListener('submit', async function (e) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ message: userMessage }), // Send as { "message": "..." }
+      body: JSON.stringify({ message: userMessage }),
     });
 
-    // Remove the "thinking" message before displaying the actual response or error
     if (thinkingMsgElement && chatBox.contains(thinkingMsgElement)) {
       chatBox.removeChild(thinkingMsgElement);
     }
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ reply: `HTTP error! status: ${response.status}` })); // Try to parse error, fallback
+      const errorData = await response.json().catch(() => ({ reply: `HTTP error! status: ${response.status}` }));
       throw new Error(errorData.reply || `HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
-    appendMessage('bot', data.reply); // Expecting { "reply": "..." } from backend
+    await typeMessage('bot', data.reply);
   } catch (error) {
     console.error('Error sending message to backend:', error);
-    // Ensure thinking message is removed on error too
     if (thinkingMsgElement && chatBox.contains(thinkingMsgElement)) {
       chatBox.removeChild(thinkingMsgElement);
     }
@@ -50,5 +47,23 @@ function appendMessage(sender, text) {
   msg.textContent = text;
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
-  return msg; // Return the message element so it can be removed if needed
+  return msg;
+}
+
+async function typeMessage(sender, text) {
+  const msg = document.createElement('div');
+  msg.classList.add('message', sender);
+  chatBox.appendChild(msg);
+
+  const delay = 30; // Delay between each character (milliseconds)
+  let currentText = '';
+  
+  for (let i = 0; i < text.length; i++) {
+    currentText += text[i];
+    msg.textContent = currentText;
+    chatBox.scrollTop = chatBox.scrollHeight;
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
+  
+  return msg;
 }
