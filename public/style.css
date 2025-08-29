@@ -1,0 +1,99 @@
+body {
+  font-family: sans-serif; /* Using a more generic sans-serif */
+  display: flex; /* For centering the container */
+  justify-content: center; /* For centering the container */
+  align-items: center; /* For centering the container */
+  min-height: 100vh; /* Full viewport height */
+  background-color: #f0f2f5;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  background-color: white;
+  padding: 25px; /* Increased padding */
+  border-radius: 8px; /* Slightly less rounded */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Softer shadow */
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  height: 80vh; /* Occupy more vertical space */
+  max-height: 700px; /* Max height constraint */
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-top: 0; /* Remove default top margin */
+  margin-bottom: 20px;
+}
+
+.chat-box {
+  flex-grow: 1; /* Allow chat-box to grow and fill available space */
+  border: 1px solid #ddd;
+  padding: 15px; /* Increased padding */
+  overflow-y: auto;
+  margin-bottom: 15px; /* Increased margin */
+  background-color: #f9f9f9; /* Slightly different background */
+  display: flex; /* To manage messages as flex items */
+  flex-direction: column; /* Stack messages vertically */
+  gap: 10px; /* Space between messages */
+}
+
+.message {
+  padding: 10px 15px; /* More padding inside messages */
+  border-radius: 18px; /* More rounded bubbles */
+  max-width: 80%;
+  line-height: 1.4; /* Better readability */
+  word-wrap: break-word; /* Ensure long words break and don't overflow */
+}
+
+.message.user {
+  background-color: #007bff; /* Standard blue for user */
+  color: white;
+  align-self: flex-end; /* Align user messages to the right */
+  border-bottom-right-radius: 5px; /* Differentiate bubble shape slightly */
+}
+
+.message.bot {
+  background-color: #e9e9eb; /* Light grey for bot */
+  color: #333;
+  align-self: flex-start; /* Align bot messages to the left */
+  white-space: pre-wrap; /* Crucial for preserving newlines and spaces from AI */
+  border-bottom-left-radius: 5px; /* Differentiate bubble shape slightly */
+}
+
+#chat-form { /* Targeting the form by ID for specificity */
+  display: flex;
+  gap: 10px;
+}
+
+#user-input { /* Targeting the input by ID */
+  flex-grow: 1; /* Input field takes available space */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px; /* Less rounded input field */
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px; /* Less rounded button */
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0b5ed7;
+}
+
+/* Optional: Styling for the "thinking" message if it's empty */
+.message.bot:empty::before {
+  content: "Thinking..."; /* Placeholder text for empty bot message */
+  font-style: italic;
+  color: #777;
+}
