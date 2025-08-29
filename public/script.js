@@ -55,7 +55,7 @@ async function typeMessage(sender, text) {
   msg.classList.add('message', sender);
   chatBox.appendChild(msg);
 
-  const delay = 30; // Delay between each character (milliseconds)
+  const delay = 3; // Delay between each character (milliseconds)
   let currentText = '';
   
   for (let i = 0; i < text.length; i++) {
