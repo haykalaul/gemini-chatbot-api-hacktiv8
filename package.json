@@ -1,5 +1,5 @@
 {
-  "name": "gemini-flash-api",
+  "name": "gemini-chatbot-api",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -9,12 +9,10 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "type": "module",
   "dependencies": {
-    "@google/genai": "^1.16.0",
     "@google/generative-ai": "^0.24.1",
-    "dotenv": "^17.2.1",
-    "express": "^5.1.0",
-    "multer": "^2.0.2"
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
   }
 }

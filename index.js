@@ -1,100 +1,36 @@
-import 'dotenv/config';
-import express from 'express';
-import multer from 'multer';
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-import { GoogleGenAI } from '@google/genai';
-
+dotenv.config();
 const app = express();
-const upload = multer();
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
-const GEMINI_MODEL = "gemini-2.5-flash";
-
+app.use(cors());
 app.use(express.json());
+app.use(express.static('public'));
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: 'models/gemini-2.0-flash' });
 
 const PORT = 3000;
-
-app.listen(PORT, () => console.log(`Server ready on http://localhost:${PORT}`));
-
-function extractText(resp) {
-    try {
-        const text =
-            resp?.response?.candidates?.[0]?.content?.parts?.[0]?.text ??
-            resp?.candidates?.[0]?.content?.parts?.[0]?.text ??
-            resp?.response?.candidates?.[0]?.content?.text;
-
-        return text ?? JSON.stringify(resp, null, 2);
-    } catch (err) {
-        console.error("Error extracting text:", err);
-        return JSON.stringify(resp, null, 2);
-    }
-}
-
-// GENERATE TEXT
-app.post('/generate-text', async (req, res) => {
-    try {
-        const { prompt } = req.body;
-        const resp = await ai.models.generateContent({
-            model: GEMINI_MODEL,
-            contents: prompt
-        });
-        res.json({ result: extractText(resp) });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+app.listen(PORT, () => {
+    console.log(`GEMINI CHATBOT is running at http://localhost:${PORT}`);
 });
 
-// GENERATE FROM IMAGE
-app.post('/generate-from-image', upload.single('image'), async (req, res) => {
-    try {
-        const { prompt } = req.body;
-        const imageBase64 = req.file.buffer.toString('base64');
-        const resp = await ai.models.generateContent({
-            model: GEMINI_MODEL,
-            contents: [
-                { text: prompt },
-                { inlineData: { mimeType: req.file.mimetype, data: imageBase64 } }
-            ]
-        });
-        res.json({ result: extractText(resp) });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+app.post('/api/chat', async (req, res) => {
+    const userMessage = req.body.message;
 
-// GENERATE FROM DOCUMENT
-app.post('/generate-from-document', upload.single('document'), async (req, res) => {
-    try {
-        const { prompt } = req.body;
-        const docBase64 = req.file.buffer.toString('base64');
-        const resp = await ai.models.generateContent({
-            model: GEMINI_MODEL,
-            contents: [
-                { text: prompt || "Ringkas dokumen berikut:" },
-                { inlineData: { mimeType: req.file.mimetype, data: docBase64 } }
-            ]
-        });
-        res.json({ result: extractText(resp) });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    if (!userMessage) {
+        return res.status(400).json({ error: 'Message is required' });
     }
-});
 
-// GENERATE FROM AUDIO
-app.post('/generate-from-audio', upload.single('audio'), async (req, res) => {
     try {
-        const { prompt } = req.body;
-        const audioBase64 = req.file.buffer.toString('base64');
-        const resp = await ai.models.generateContent({
-            model: GEMINI_MODEL,
-            contents: [
-                { text: prompt || "Transkrip audio berikut:" },
-                { inlineData: { mimeType: req.file.mimetype, data: audioBase64 } }
-            ]
-        });
-        res.json({ result: extractText(resp) });
+        const result = await model.generateContent(userMessage);
+        const response = await result.response;
+        const text = response.text();
+        res.json({ reply: text });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error(err)
+        res.status(500).json({ reply: 'Something went wrong.' });
     }
 });
